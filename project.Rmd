@@ -34,4 +34,12 @@ set.seed(9999)
 
 ```
 
+```{r}
+#duratoion of process day
+as.Date(as.character(data$DECISION_DATE), format="%m/%d/%Y")-as.Date(as.character(data$CASE_SUBMITTED), format="%m/%d/%Y")
+range(as.Date(as.character(data$DECISION_DATE), format="%m/%d/%Y")-as.Date(as.character(data$CASE_SUBMITTED), format="%m/%d/%Y"))
 
+#employment duration
+as.Date(as.character(data$EMPLOYMENT_END_DATE), format="%m/%d/%Y")-as.Date(as.character(data$EMPLOYMENT_START_DATE), format="%m/%d/%Y")
+range(as.Date(as.character(data$EMPLOYMENT_END_DATE), format="%m/%d/%Y")-as.Date(as.character(data$EMPLOYMENT_START_DATE), format="%m/%d/%Y"))
+```
