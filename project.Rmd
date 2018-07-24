@@ -1,0 +1,37 @@
+---
+title: "project"
+author: "Huimei Huang"
+date: "7/17/2018"
+output: html_document
+---
+
+```{r}
+data <- read.csv("TrainH1BLast.csv")[, -1]
+dim(data)
+str(data)
+summary(data)
+names(data)
+data <- data[, -46] # all NAs
+any(is.na(data) == T) # there are some NAs in the data set
+data <- na.omit(data)  # clear NAs in the data set
+str(data)
+dim(data)
+levels(data$CASE_STATUS)
+
+```
+
+```{r}
+# separate the data into training data and testing data set
+set.seed(9999)
+#train_index <- 
+
+```
+
+- have to check the model assumption
+
+```{r}
+# glm()
+
+```
+
+
