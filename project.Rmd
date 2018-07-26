@@ -1,36 +1,83 @@
 ---
-title: "project"
+  title: "project"
 author: "Huimei Huang"
 date: "7/17/2018"
 output: html_document
 ---
-
-```{r}
-data <- read.csv("TrainH1BLast.csv")[, -1]
+  
+  # Note
+  ## have to check model assumption
+  
+  
+  
+  ```{r}
+rm(list = ls())
+data <- read.csv("TrainH1BLast.csv")
 dim(data)
-str(data)
-summary(data)
-names(data)
-data <- data[, -46] # all NAs
-any(is.na(data) == T) # there are some NAs in the data set
-data <- na.omit(data)  # clear NAs in the data set
-str(data)
-dim(data)
-levels(data$CASE_STATUS)
 
-```
-
-```{r}
 # separate the data into training data and testing data set
+4918 * 0.7   # 3442.6
 set.seed(9999)
-#train_index <- 
+i_train <- sample(1:4918, 3443, replace = F)
+data_train <- data[i_train, ]
+data_test <- data[-i_train, ]
+dim(data_train)
+dim(data_test)
+
+#colnames(data)
+
+# or we don't need to delete them, just don't call them
+data_train <- data_train[, -c(1, 9, 10, 11, 13, 14, 15, 16, 17, 19, 20, 22, 23, 25, 34, 35, 39, 41, 47, 48, 49, 51, 52)]  
+# should we keep "WAGE_RATE_OF_PAY_TO" ???   it maybe important
+dim(data_train)
+
+model <- glm(data_train$CASE_STATUS~data_train$EMPLOYER_STATE + data_train$SUPPORT_H1B, data = data_train, family = binomial)
+summary(model)
+
+test <- read.csv("TestH1BLast No Y values.csv")
+dim(test) # 2093*51
+#str(data)
+
+# how to fix this??
+# 'newdata' had 2093 rows but variables found have 3443 rows
+predict_Y <- predict(model, test, type = "response") > 0.5
+for(i in 1:2093){
+  predict_Y[i] = ifelse(predict_Y[i] == TRUE, "CERTIFIED", "DENIED")
+}
+
+test_Y <- data.frame(CASE_STATUS = predict_Y[1:2093])
+head(test_Y, 30)  # factor
+
+# Write CSV in R
+write.csv(test_Y, file = "predict.csv")
+# name frist col "Ob"
+
+#any(is.na(data_train) == T) # there are some NAs in the data set
+#data_train <- na.omit(data_train)  # clear NAs in the data set
+#str(data_train)
+#dim(data_train)
+
 
 ```
 
-- have to check the model assumption
 
+
+# The following parts are Data processing............
+
+## WAGE_RATE_OF_PAY_FROM processing
 ```{r}
-# glm()
+# hour to year
+hr_index <- which(data$WAGE_UNIT_OF_PAY == "Hour")
+hr_to_yr <- data$WAGE_RATE_OF_PAY_FROM[hr_index] * 52 * 40
+data$WAGE_RATE_OF_PAY_FROM[hr_index] <- hr_to_yr
+
+# week to year
+
+
+
+# month to year
+
+
 
 ```
 
